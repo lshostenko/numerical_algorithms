@@ -1,38 +1,24 @@
 import numpy as np
 
 
-def get_peaks_bounds(array):
+def get_peaks(array):
     peaks = []
 
-    lenght = len(array)
-    cur_val = 0
-    cur_candidate = []
+    start = -1
+    cur_val = - np.inf
 
-    for ix in range(lenght):
-        next_val = array[ix]
-
+    for ix, next_val in enumerate(array):
         if next_val > cur_val:
-            cur_candidate = [ix]
+            start = ix
 
-        elif cur_candidate:
-            if next_val == cur_val:
-                cur_candidate.append(ix)
-
-            else:
-                peaks.append(cur_candidate)
-                cur_candidate = []
+        elif start != -1 and next_val != cur_val:
+            peaks.append((start + ix - 1) / 2)
+            start = -1
 
         cur_val = next_val
 
-    if cur_candidate:
-        peaks.append(cur_candidate)
-
-    return peaks
-
-
-def get_peaks(array):
-    peaks_bounds = get_peaks_bounds(array)
-    peaks = [sum(bound) / len(bound) for bound in peaks_bounds]
+    if start != -1:
+        peaks.append((start + ix - 1) / 2)
 
     return peaks
 
