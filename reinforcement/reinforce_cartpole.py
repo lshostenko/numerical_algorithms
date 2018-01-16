@@ -143,7 +143,9 @@ if __name__ == '__main__':
             action = agent.get_action(state)
             next_state, reward, done, info = env.step(action)
             next_state = np.reshape(next_state, [1, state_size])
-            reward = reward if not done or score == 499 else -100
+
+            if done and score < 499:
+                reward = -100
 
             agent.append_sample(state, action, reward)
 
@@ -153,7 +155,7 @@ if __name__ == '__main__':
             if done:
                 agent.train_model()
 
-                if score != 500:
+                if score < 500:
                     score += 100
 
                 scores.append(score)
