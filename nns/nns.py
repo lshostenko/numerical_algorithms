@@ -26,7 +26,7 @@ def get_peaks(array):
 def get_unfolded_nns(peaks, window=5):
     spacings = np.diff(peaks)
 
-    length = len(spacings)
+    length = spacings.shape[0]
     unfolded_spacings = np.zeros(length)
 
     for ix in range(length):
