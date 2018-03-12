@@ -11,14 +11,14 @@ def get_peaks(array):
         if next_val > cur_val:
             start = ix
 
-        elif start != -1 and next_val != cur_val:
+        elif start != -1 and next_val < cur_val:
             peaks.append((start + ix - 1) / 2)
             start = -1
 
         cur_val = next_val
 
-    if start != -1:
-        peaks.append((start + ix - 1) / 2)
+    if peaks and start != -1:
+        peaks.append((start + ix) / 2)
 
     return peaks
 
