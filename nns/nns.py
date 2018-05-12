@@ -1,38 +1,74 @@
 import numpy as np
 
 
-def get_peaks(array):
-    peaks = []
+def detect_peaks(array):
+    size = array.size
 
-    start = -1
-    cur_val = - np.inf
+    if size < 3:
+        return np.array([])
 
-    for ix, next_val in enumerate(array):
-        if next_val > cur_val:
-            start = ix
+    diff = np.hstack((np.inf, np.diff(array), - np.inf))
 
-        elif start != -1 and next_val != cur_val:
-            peaks.append((start + ix - 1) / 2)
-            start = -1
+    _ind = np.where(diff != 0)[0]
 
-        cur_val = next_val
+    if np.array_equal(_ind, [0, size]):
+        return np.array([])
 
-    if start != -1:
-        peaks.append((start + ix - 1) / 2)
+    _peaks = np.where((diff[_ind][:-1] > 0) & (diff[_ind][1:] < 0))[0]
+
+    peaks = (_ind[:-1][_peaks] + _ind[1:][_peaks] - 1) / 2
 
     return peaks
 
 
-def get_unfolded_nns(peaks, window=5):
+def detect_significant_peaks(array, threshold=0, min_height=None):
+    size = array.size
+
+    if size < 3:
+        return np.array([])
+
+    diff = np.hstack((np.inf, np.diff(array), - np.inf))
+
+    peaks = np.where((diff[:-1] > threshold) & (diff[1:] < - threshold))[0]
+
+    if min_height is not None:
+        peaks = peaks[array[peaks] >= min_height]
+
+    return peaks
+
+
+def moving_average(array, averaging_len=5):
+    if averaging_len <= 0 or not isinstance(averaging_len, int):
+        raise ValueError('\'averaging_len\' should be positive integer')
+
+    window = 2 * averaging_len + 1
+    size = array.size
+
+    if size < window:
+        return array
+
+    array = np.hstack(
+        (0, array[:averaging_len], array, array[size - averaging_len:]),
+    )
+
+    cumulative = np.cumsum(array)
+
+    average = cumulative[window:].astype(np.float64)
+    average -= cumulative[:- window]
+    average /= window
+
+    return average
+
+
+def unfolded_nns(peaks, averaging_len=None):
     spacings = np.diff(peaks)
 
-    length = spacings.shape[0]
-    unfolded_spacings = np.zeros(length)
+    if not np.all(spacings > 0):
+        raise ValueError('\'peaks\' should be sorted array of unique numbers')
 
-    for ix in range(length):
-        start = max(0, ix - window)
-        end = min(length, ix + window + 1)
+    if averaging_len is None:
+        return spacings / spacings.mean()
 
-        unfolded_spacings[ix] = spacings[ix] / spacings[start:end].mean()
+    average = moving_average(spacings, averaging_len=averaging_len)
 
-    return unfolded_spacings
+    return spacings / average
