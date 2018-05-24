@@ -1,0 +1,6 @@
+graft numerical_algorithms
+
+include requirements.txt
+
+global-exclude *.pyc
+global-exclude __pycache__
