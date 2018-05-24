@@ -21,6 +21,9 @@ setup(
     version='{version}'.format(
         version=VERSION,
     ),
+    download_url='https://github.com/wikibusiness/lexrank/archive/{version}.tar.gz'.format(  # noqa
+        version=VERSION,
+    ),
     description='Optimized numerical routines.',
     long_description=readme_text,
     license='Apa',
