@@ -1,2 +1,4 @@
-# drafts
-Unorganized Python code.
+Numerical algorithms
+====================
+
+Vector and matrix calculations using NumPy and SciPy
