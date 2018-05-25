@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
 requirements = Path(__file__).parent / 'requirements.txt'
 
@@ -29,7 +29,7 @@ setup(
     license='Apache License 2.0',
     author='Luka Shostenko',
     author_email='luka.shostenko@gmail.com',
-    packages=find_packages(include=['numerical_algorithms.*']),
+    packages=['numerical_algorithms'],
     python_requires='>=3.5.0',
     install_requires=install_requires,
     include_package_data=True,
