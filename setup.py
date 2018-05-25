@@ -21,12 +21,12 @@ setup(
     version='{version}'.format(
         version=VERSION,
     ),
-    download_url='https://github.com/wikibusiness/lexrank/archive/{version}.tar.gz'.format(  # noqa
+    download_url='https://github.com/LShostenko/numerical_algorithms/archive/{version}.tar.gz'.format(  # noqa
         version=VERSION,
     ),
     description='Optimized numerical routines.',
     long_description=readme_text,
-    license='Apa',
+    license='Apache License 2.0',
     author='Luka Shostenko',
     author_email='luka.shostenko@gmail.com',
     packages=find_packages(include=['numerical_algorithms.*']),
