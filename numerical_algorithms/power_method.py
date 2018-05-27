@@ -2,6 +2,16 @@ import numpy as np
 from scipy.sparse.csgraph import connected_components
 
 
+def _is_markov_matrix(matrix):
+    shape = matrix.shape
+
+    is_markov = len(shape) == 2 and \
+        shape[0] == shape[1] and \
+        np.allclose(matrix.sum(axis=1), 1)
+
+    return is_markov
+
+
 def _power_method(transition_matrix, increase_power=True):
     eigenvector = np.ones(len(transition_matrix))
 
@@ -38,7 +48,14 @@ def stationary_distribution(
     transition_matrix,
     increase_power=True,
     normalized=True,
+    safe=True,
 ):
+    if safe and not _is_markov_matrix(transition_matrix):
+        msg = '\'transition_matrix\' should be a square matrix with' \
+            'sum of each row equal to one'
+
+        raise ValueError(msg)
+
     size = len(transition_matrix)
     distribution = np.zeros(size)
 
