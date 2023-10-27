@@ -28,14 +28,12 @@ def _partition(lst, start, end):
     return bound_ix - 1
 
 
-def quicksort(lst, start=None, end=None):
-    if start is None:
-        start = 0
-
-    if end is None:
-        end = len(lst)
-
+def _quicksort(lst, start, end):
     if end - start > 1:
         pivot_ix = _partition(lst, start, end)
-        quicksort(lst, start=start, end=pivot_ix)
-        quicksort(lst, start=pivot_ix + 1, end=end)
+        _quicksort(lst, start, pivot_ix)
+        _quicksort(lst, pivot_ix + 1, end)
+
+
+def quicksort(lst):
+    _quicksort(lst, 0, len(lst))
